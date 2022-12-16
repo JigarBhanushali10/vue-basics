@@ -1,17 +1,46 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <!-- <img alt="Vue logo" :src="url" :class="['success','undeline']"> -->
+
+  <p>
+
+    {{data}}
+  </p>
+
+  <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"  :name="name"  @callHi="hi"  :user="user"/> -->
+<!-- <Copia></Copia> -->
+<MapDemo></MapDemo>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup lang="ts">
+/* eslint-disable */
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+import {  reactive, ref } from 'vue';
+import Copia from './components/Copia.vue';
+import HelloWorld from './components/HelloWorld.vue';
+import MapDemo from './components/Map-Demo.vue';
+// import DemoMap from './components/DemoMap.vue';
+
+
+const url=require('./assets/logo.png')
+const data=ref()
+const hi=(...args: any[])=>{
+  console.log(args);
+  data.value=args
 }
+
+const user = reactive({
+id:1,
+name:'viral',
+age:26
+})
+console.log(user);
+user.age=23
+console.log(user);
+
+const name= ref('jigar')
+
+
+
 </script>
 
 <style>
