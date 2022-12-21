@@ -22,6 +22,7 @@ console.log(currPos.value);
 let cords = reactive(locations)
 const mapRef = ref(null)
 const mapDiv = ref()
+const clusters = ref([])
 let infoWindow = {}
 
 const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -34,12 +35,73 @@ const loader = new Loader({
 });
 
 
-onMounted(
-  () => {
-   let geocoder = new google.maps.Geocoder()
-    console.log(geocoder)
+
+
+var clusterStyles = [
+  {
+    textColor: 'white',
+    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa88gtYlcIGYRv5X5yEs7NbJ5JkJdDvzCmLf41BtSCgHqCodZV2fa4ZIjCjroPj27SQCE&usqp=CAU',
+    height: 50,
+    width: 50
+  },
+  {
+    textColor: 'white',
+    url: 'https://camo.githubusercontent.com/c1d0f94b63321e032916e45fc5d0826e417a675f800d36b9b636cd032a1d43db/68747470733a2f2f6d61726b65722e6e616e6f6b612e66722f6d61705f636c75737465722d4646303030302d3132302e737667',
+    height: 50,
+    width: 50
+  },
+  {
+    textColor: 'white',
+    url: 'https://files.helpdocs.io/y0fqv9nyr6/logo.png?t=1577995057515',
+    height: 50,
+    width: 50
   }
-)
+];
+
+
+var mcOptions = {
+  gridSize: 50,
+  styles: clusterStyles,
+  maxZoom: 15
+};
+
+
+
+const renderer = {
+  render({ count, position }, clusters) {
+    // console.log(clusters);
+
+    const color =
+      count > Math.max(10, clusters.clusters.markers.mean)
+        ? "#673ab7cc"
+        : "#03a9f4c2";
+
+    // create svg url with fill color
+    const svg = window.btoa(`
+      <svg fill="${color}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+          <circle cx="120" cy="120" opacity=".6" r="70" />
+          <circle cx="120" cy="120" opacity=".3" r="90" />
+          <circle cx="120" cy="120" opacity=".2" r="110" />
+          <circle cx="120" cy="120" opacity=".1" r="130" />
+        </svg>`);
+
+
+
+    return new google.maps.Marker({
+      label: { text: String(count), color: "white", fontSize: "10px" },
+      position: position,
+      icon: {
+        url: `data:image/svg+xml;base64,${svg}`,
+        // url: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa88gtYlcIGYRv5X5yEs7NbJ5JkJdDvzCmLf41BtSCgHqCodZV2fa4ZIjCjroPj27SQCE&usqp=CAU`,
+        scaledSize: new google.maps.Size(45, 45),
+      },
+      // adjust zIndex to be above other markers
+      zIndex: Number(google.maps.Marker.MAX_ZINDEX) + count,
+    });
+  }
+}
+
+
 
 onMounted(
   async () => {
@@ -86,7 +148,7 @@ onMounted(
       addMarker(event.latLng);
     });
 
-    const cluster = new MarkerClusterer({ markers, map: mapRef.value, });
+    clusters.value = new MarkerClusterer({ markers, map: mapRef.value, renderer });
 
   }
   ,

@@ -5,12 +5,13 @@
 </template>
 
 <script setup>
-import { onBeforeMount,ref} from 'vue';
+import { onMounted, ref } from 'vue';
+import { google } from '@googlemaps/js-api-loader';
 
-const mapDiv =ref(null)
+const mapDiv = ref(null)
 
 
-function initMap() {
+const initMap = () => {
   const myLatlng = { lat: -25.363, lng: 131.044 };
   const map = new google.maps.Map(mapDiv.value, {
     zoom: 4,
@@ -38,7 +39,7 @@ function initMap() {
   });
 }
 
-onBeforeMount(()=>initMap())
+onMounted(() => initMap())
 
 
 </script>

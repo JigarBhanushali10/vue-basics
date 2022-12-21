@@ -1,24 +1,34 @@
 <template>
-  <!-- <img alt="Vue logo" :src="url" :class="['success','undeline']"> -->
 
-  <p>
-
-    {{data}}
-  </p>
 
   <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"  :name="name"  @callHi="hi"  :user="user"/> -->
 <!-- <Copia></Copia> -->
-<MapDemo></MapDemo>
+
+<!-- cluster Demo -->
+<!-- <MapDemo></MapDemo> -->
+<MasterComponent/>
+
+<!-- geocoding demo -->
+
+<!-- <MapGeocodingService></MapGeocodingService> -->
+
+
+<!-- Places demo -->
+<!-- <PlacesDemo></PlacesDemo> -->
 </template>
 
 <script setup lang="ts">
 /* eslint-disable */
 
+
 import {  reactive, ref } from 'vue';
 import Copia from './components/Copia.vue';
 import HelloWorld from './components/HelloWorld.vue';
-import MapDemo from './components/Map-Demo.vue';
-// import DemoMap from './components/DemoMap.vue';
+import MapDemo from './components/Map-Clusters.vue';
+import MapGeocodingService from './components/MapGeocodingService.vue';
+import PlacesDemo from './components/PlacesDemo.vue';
+import DemoMap from './components/DemoMap.vue';
+import MasterComponent from './components/MasterComponent.vue';
 
 
 const url=require('./assets/logo.png')
@@ -44,12 +54,5 @@ const name= ref('jigar')
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
