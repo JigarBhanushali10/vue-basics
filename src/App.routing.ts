@@ -5,7 +5,9 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import MapClusters from '@/components/Map-Clusters.vue';
 import MapGeocodingService from '@/components/MapGeocodingService.vue';
 import PlacesDemo from '@/components/PlacesDemo.vue';
+import VueMaps from '@/components/Vue3Map.vue';
 import DemoMap from '@/components/DemoMap.vue';
+import Copia from '@/components/Copia.vue';
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -35,7 +37,17 @@ const routes: Array<RouteRecordRaw> = [
     {
       path: "/geocoding",
       name: "map-geocoding",
-      component: DemoMap,
+      component: MapGeocodingService,
+    },
+    {
+      path: "/vue3maps",
+      name: "vue3maps",
+      component: VueMaps,
+    },
+    {
+      path: "/copia",
+      name: "opia",
+      component: Copia,
     },
   ];
 

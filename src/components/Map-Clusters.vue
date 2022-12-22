@@ -1,26 +1,35 @@
 <template>
   Map:
-  <div id="map" ref="mapDiv" class="h-100 w-100">
+  <div class="position-relative h-100 w-100">
 
+    <div id="map" ref="mapDiv" class="h-100 w-100">
+
+    </div>
+
+    <div class="bg-white w-25 h-25 position-absolute  bottom-0 end-0 p-3 m-3 text-break d-flex flex-column shadow rounded-3" v-if="toggleInfoWindo">
+      
+      <span class="align-self-end cursor-pointer" @click="closeInfoWindows">X</span>
+      <div class="flex-grow-1 w-100">
+        {{ infoWindoContent }}
+
+      </div>
+    </div>
   </div>
 </template>
 <script setup >
 
 /* eslint-disable */
-import { Loader, } from '@googlemaps/js-api-loader';
-import { onBeforeMount, ref, reactive, computed, onMounted, createApp } from 'vue'
-import { useGeolocation, locations } from './useGeolocation'
+import { Loader } from '@googlemaps/js-api-loader';
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
+import { onMounted, reactive, ref } from 'vue';
+import { locations } from './useGeolocation';
 
-const { coords } = useGeolocation()
-const currPos = computed(() => ({
-  lat: coords.value.latitude,
-  lng: coords.value.longitude
-}))
-console.log(currPos.value);
+
 
 let cords = reactive(locations)
 const mapRef = ref(null)
+const toggleInfoWindo = ref(false)
+const infoWindoContent = ref('')
 const mapDiv = ref()
 const clusters = ref([])
 let infoWindow = {}
@@ -101,60 +110,74 @@ const renderer = {
   }
 }
 
-
+const closeInfoWindows= ()=>{
+  toggleInfoWindo.value = false
+    infoWindow.close()
+}
 
 onMounted(
-  async () => {
-    await loader.load()
-    mapRef.value = new google.maps.Map(mapDiv.value, {
-      center: {
-        lat: 20.35828744987769,
-        lng: 72.9562395167823
-      },
-      zoom: 8,
-    });
-
-    const markers = cords?.map((item, i) => {
-      const label = labels[i % labels.length];
-
-      infoWindow = new google.maps.InfoWindow({
-        content: "",
-        disableAutoPan: false
-      });
-      const marker = new google.maps.Marker({
-        position: {
-          lat: item.location.lat,
-          lng: item.location.lng
-        },
-        map: mapRef.value,
-        label,
-        icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/info-i_maps.png"
-      });
-
-
-      marker.addListener("click", (mapsMouseEvent) => {
-        mapRef.value.panTo(mapsMouseEvent.latLng.toJSON());
-        mapRef.value.setZoom(12);
-        infoWindow.setContent(label + '  ' +
-          JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
-        );
-        infoWindow.open(mapRef, marker);
-      });
-      return marker
-    })
-
-    mapRef.value.addListener("click", (event) => {
-      // console.log(event);
-      addMarker(event.latLng);
-    });
-
-    clusters.value = new MarkerClusterer({ markers, map: mapRef.value, renderer });
-
+  () => {
+    renderaMap()
   }
   ,
 
 )
+async function renderaMap() {
+  await loader.load()
+  mapRef.value = new google.maps.Map(mapDiv.value, {
+    center: {
+      lat: 20.35828744987769,
+      lng: 72.9562395167823
+    },
+    zoom: 8,
+    disableDefaultUI: true
+  });
 
+
+
+
+
+  const markers = cords?.map((item, i) => {
+    const label = labels[i % labels.length];
+
+    infoWindow = new google.maps.InfoWindow({
+      content: "",
+      disableAutoPan: false
+    });
+    const marker = new google.maps.Marker({
+      position: {
+        lat: item.location.lat,
+        lng: item.location.lng
+      },
+      map: mapRef.value,
+      label,
+      icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/info-i_maps.png"
+    });
+
+
+    marker.addListener("click", (mapsMouseEvent) => {
+      mapRef.value.panTo(mapsMouseEvent.latLng.toJSON());
+      mapRef.value.setZoom(12);
+      infoWindow.setContent(label + '  ' +
+        JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
+      );
+      infoWindow.open(mapRef, marker);
+      toggleInfoWindo.value = true
+      infoWindoContent.value = label + '  ' + JSON.stringify(mapsMouseEvent.latLng.toJSON())
+    });
+    return marker
+  })
+  infoWindow.addListener('closeclick', () => {
+    closeInfoWindows()
+  });
+  mapRef.value.addListener("click", (event) => {
+    // console.log(event);
+    closeInfoWindows()
+  });
+
+  clusters.value = new MarkerClusterer({ markers, map: mapRef.value, renderer });
+
+}
 
 
 function addMarker(position) {
@@ -168,6 +191,9 @@ function addMarker(position) {
       icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/info-i_maps.png"
     });
     cords.push(marker);
+    // setTimeout(() => {
+    //   renderaMap()
+    // }, 0);
     // console.log(cords);
 
     google.maps.event.addListener(marker, 'click', (event) => {
@@ -185,3 +211,8 @@ function addMarker(position) {
 
 }
 </script>
+<style>
+.cursor-pointer{
+  cursor: pointer;
+}
+</style>
