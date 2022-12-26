@@ -26,6 +26,11 @@ export default {
             lat: coords.value.latitude,
             lng: coords.value.longitude
         }))
+
+
+
+
+
         /*
         //forma directa y sencilla
         const success =(position) => {
@@ -57,6 +62,21 @@ export default {
             municipio: '',
             estado: ''
         })
+
+        // a computed ref
+        const mk = computed(() => {
+
+            return markers?.map((event) => {
+
+                const marker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: map.value,
+                    // icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/info-i_maps.png"
+                });
+            })
+        })
+
+        console.log({ mk });
         //initMap
         loader.load().then(() => {
             let center = {
@@ -101,11 +121,7 @@ export default {
                 //alert(marker.getPosition())
                 console.log(event.latLng);
 
-                const marker = new google.maps.Marker({
-                    position: event.latLng,
-                    map: map.value,
-                    // icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/info-i_maps.png"
-                });
+
 
                 markers.push(marker)
                 console.log(markers);
@@ -129,77 +145,77 @@ export default {
                 componentRestrictions: { country: "mx" },
                 types: ['geocode']
             }
-                // const autocomplete = new google.maps.places.Autocomplete(placeInput, options);
-                // google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                //     //obtener el lugar
-                //     let place = autocomplete.getPlace();
-                //     sessionStorage.setItem('placeInput', placeInput.value)
-                //     center = place.geometry.location;
-                //     //guardar center por busqueda plces
-                //     sessionStorage.setItem('center', JSON.stringify(center))
-                //     //centrar el mapa en el lugar
-                //     map.value.setCenter(center)
-                //     //poner marcador en ese lugar
-                //     marker.value.setPosition(center)
-                //     sessionStorage.setItem('map', map.value);
-                //     sessionStorage.setItem('marker', marker.value);
-                //     resul_lat.value = center.lat();
-                //     resul_lng.value = center.lng();
-                //     //limpiar todo
-                //     exterior.value = ''
-                //     calle.value = ''
-                //     colonia.value = ''
-                //     CP.value = ''
-                //     municipio.value = ''
-                //     estado.value = ''
-                //     placeDet.value = {
-                //         exterior: '',
-                //         interior: '',
-                //         calle: '',
-                //         colonia: '',
-                //         CP: '',
-                //         localidad: '',
-                //         municipio: '',
-                //         estado: '',
-                //     }
-                //     //guardar detalles
-                //     // let detalles = place.address_components
-                //     // for (let i = 0; i < detalles.length; i++) {
-                //     //     var d = detalles[i]
-                //     //     switch (d.types[0]) {
-                //     //         case "street_number":
-                //     //             placeDet.value.exterior = d.long_name
-                //     //             //alert('numero exterior '+d.long_name)
-                //     //             break
-                //     //         case "route":
-                //     //             placeDet.value.calle = d.long_name
-                //     //             //alert('numero exterior '+d.long_name)
-                //     //             break
-                //     //         case "sublocality_level_1":
-                //     //             placeDet.value.colonia = d.long_name
-                //     //             //alert('la colonia es ' + d.long_name)
-                //     //             break
-                //     //         case "postal_code":
-                //     //             placeDet.value.CP = d.long_name
-                //     //             //alert('la colonia es ' + d.long_name)
-                //     //             break
-                //     //         case "locality":
-                //     //             placeDet.value.municipio = d.long_name
-                //     //             //alert('municipio es ' + d.long_name)
-                //     //             break
-                //     //         case "administrative_area_level_1":
-                //     //             placeDet.value.estado = d.long_name
-                //     //             //alert('estado es ' + d.long_name)
-                //     //             break
-                //     //         case 'country':
-                //     //             //alert('el pais es ' + d.long_name)
-                //     //             break
-                //     //     }
-                //     // }
-                //     // sessionStorage.setItem('placeDet', JSON.stringify(placeDet.value));
-                // });\
+            // const autocomplete = new google.maps.places.Autocomplete(placeInput, options);
+            // google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            //     //obtener el lugar
+            //     let place = autocomplete.getPlace();
+            //     sessionStorage.setItem('placeInput', placeInput.value)
+            //     center = place.geometry.location;
+            //     //guardar center por busqueda plces
+            //     sessionStorage.setItem('center', JSON.stringify(center))
+            //     //centrar el mapa en el lugar
+            //     map.value.setCenter(center)
+            //     //poner marcador en ese lugar
+            //     marker.value.setPosition(center)
+            //     sessionStorage.setItem('map', map.value);
+            //     sessionStorage.setItem('marker', marker.value);
+            //     resul_lat.value = center.lat();
+            //     resul_lng.value = center.lng();
+            //     //limpiar todo
+            //     exterior.value = ''
+            //     calle.value = ''
+            //     colonia.value = ''
+            //     CP.value = ''
+            //     municipio.value = ''
+            //     estado.value = ''
+            //     placeDet.value = {
+            //         exterior: '',
+            //         interior: '',
+            //         calle: '',
+            //         colonia: '',
+            //         CP: '',
+            //         localidad: '',
+            //         municipio: '',
+            //         estado: '',
+            //     }
+            //     //guardar detalles
+            //     // let detalles = place.address_components
+            //     // for (let i = 0; i < detalles.length; i++) {
+            //     //     var d = detalles[i]
+            //     //     switch (d.types[0]) {
+            //     //         case "street_number":
+            //     //             placeDet.value.exterior = d.long_name
+            //     //             //alert('numero exterior '+d.long_name)
+            //     //             break
+            //     //         case "route":
+            //     //             placeDet.value.calle = d.long_name
+            //     //             //alert('numero exterior '+d.long_name)
+            //     //             break
+            //     //         case "sublocality_level_1":
+            //     //             placeDet.value.colonia = d.long_name
+            //     //             //alert('la colonia es ' + d.long_name)
+            //     //             break
+            //     //         case "postal_code":
+            //     //             placeDet.value.CP = d.long_name
+            //     //             //alert('la colonia es ' + d.long_name)
+            //     //             break
+            //     //         case "locality":
+            //     //             placeDet.value.municipio = d.long_name
+            //     //             //alert('municipio es ' + d.long_name)
+            //     //             break
+            //     //         case "administrative_area_level_1":
+            //     //             placeDet.value.estado = d.long_name
+            //     //             //alert('estado es ' + d.long_name)
+            //     //             break
+            //     //         case 'country':
+            //     //             //alert('el pais es ' + d.long_name)
+            //     //             break
+            //     //     }
+            //     // }
+            //     // sessionStorage.setItem('placeDet', JSON.stringify(placeDet.value));
+            // });\
 
-             const a =   ()=> { clusters = new MarkerClusterer({ markers, map: map.value, }); }
+            const a = () => { clusters = new MarkerClusterer({ markers, map: map.value, }); }
 
         })
         return {

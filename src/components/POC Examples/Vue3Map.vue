@@ -54,7 +54,7 @@ const center = {
     <div class="position-relative">
 
         <GoogleMap ref="mapRef" api-key="AIzaSyDovPFfMoi51Y2wPOfgy770OBDkTA7aOkQ" class="map" :center="center" :zoom="2"
-            :disableDefaultUI=true @click="jigar"/>
+            />
         <div class="jigar w-25 h-25 position-absolute bg-white end-0  shadow">
             hisdlvbndklsnv
         </div>
@@ -99,23 +99,9 @@ export default defineComponent({
         })
         
         
-        const jigar=()=>{
-            // console.log('hi');
-            mapRef.value.map.addListener("click", (event) => {
-                // console.log(event);
-                addMarker(event.latLng);
-            });
-
-        }
-        const addMarker = ({position}) => {
-            // const marker = new google.maps.Marker({
-            //     position,
-            //     map: mapRef.value,
-            //     icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/info-i_maps.png"
-            // });
-            
-        }
-        return { mapRef, center, lng,jigar }
+    
+     
+        return { mapRef, center, lng }
     },
 })
 </script>
@@ -127,15 +113,6 @@ export default defineComponent({
     height: 500px;
 }
 
-/* .map::after {
-    position: absolute;
-    content: 'alscbn';
-    width: 1px;
-    height: 100%;
-    top: 0;
-    left: 50%;
-    background: white;
-  } */
 
 input[type='number'] {
     width: 200px;

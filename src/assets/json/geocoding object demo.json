@@ -1,0 +1,38 @@
+
+
+{
+    "results": [
+      {
+       
+        "formatted_address": "P346+WQ Taylors Flat NSW, Australia",
+        "geometry": {
+          "bounds": {
+            "south": -34.29275,
+            "west": 149.061875,
+            "north": -34.292625,
+            "east": 149.062
+          },
+          "location": {
+            "lat": -34.2926842,
+            "lng": 149.0619688
+          },
+          "location_type": "GEOMETRIC_CENTER",
+          "viewport": {
+            "south": -34.2940364802915,
+            "west": 149.0605885197085,
+            "north": -34.2913385197085,
+            "east": 149.0632864802915
+          }
+        },
+        "place_id": "GhIJKIcFrXYlQcAR6iv-pfuhYkA",
+        "plus_code": {
+          "compound_code": "P346+WQ Taylors Flat NSW, Australia",
+          "global_code": "4RQFP346+WQ"
+        },
+        "types": [
+          "plus_code"
+        ]
+      }
+     
+    ]
+  }

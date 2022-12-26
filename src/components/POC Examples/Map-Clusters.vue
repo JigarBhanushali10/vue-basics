@@ -1,13 +1,19 @@
 <template>
+  
   Map:
   <div class="position-relative h-100 w-100">
-
+    <!-- button to refresh maps -->
+    <button class="btn btn-secondary" @click="refreshMap">refresh</button>
+    <!-- maps div -->
     <div id="map" ref="mapDiv" class="h-100 w-100">
-
     </div>
-
-    <div class="bg-white w-25 h-25 position-absolute  bottom-0 end-0 p-3 m-3 text-break d-flex flex-column shadow rounded-3" v-if="toggleInfoWindo">
-      
+    
+    <!-- custom info div -->
+    <div
+    class="bg-white w-25 h-25 position-absolute  bottom-0 end-0 p-3 m-3 text-break d-flex flex-column shadow rounded-3"
+    v-if="toggleInfoWindo">
+    
+    <!-- button to close custom info div -->
       <span class="align-self-end cursor-pointer" @click="closeInfoWindows">X</span>
       <div class="flex-grow-1 w-100">
         {{ infoWindoContent }}
@@ -19,7 +25,6 @@
 <script setup >
 
 /* eslint-disable */
-import { Loader } from '@googlemaps/js-api-loader';
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { onMounted, reactive, ref } from 'vue';
 import { locations } from './useGeolocation';
@@ -27,54 +32,48 @@ import { locations } from './useGeolocation';
 
 
 let cords = reactive(locations)
+// map reference
 const mapRef = ref(null)
+// toggleInfoWindo for open close infoDiv and window
 const toggleInfoWindo = ref(false)
+// infoWindoContent for close infoDiv content
 const infoWindoContent = ref('')
+// mapDiv for HTMLDIV element
 const mapDiv = ref()
+// clusters for marker cluster
 const clusters = ref([])
-let infoWindow = {}
+// infoWindow for google object
+let infoWindowObject = {}
+// geocoderObject for google object
+let geocoderObject = {}
 
 const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const id = ref(0)
-// const markers = reactive([])
 
-const loader = new Loader({
-  apiKey: "AIzaSyDovPFfMoi51Y2wPOfgy770OBDkTA7aOkQ",
-
-});
-
-
-
-
-var clusterStyles = [
-  {
-    textColor: 'white',
-    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQa88gtYlcIGYRv5X5yEs7NbJ5JkJdDvzCmLf41BtSCgHqCodZV2fa4ZIjCjroPj27SQCE&usqp=CAU',
-    height: 50,
-    width: 50
-  },
-  {
-    textColor: 'white',
-    url: 'https://camo.githubusercontent.com/c1d0f94b63321e032916e45fc5d0826e417a675f800d36b9b636cd032a1d43db/68747470733a2f2f6d61726b65722e6e616e6f6b612e66722f6d61705f636c75737465722d4646303030302d3132302e737667',
-    height: 50,
-    width: 50
-  },
-  {
-    textColor: 'white',
-    url: 'https://files.helpdocs.io/y0fqv9nyr6/logo.png?t=1577995057515',
-    height: 50,
-    width: 50
+onMounted(
+  () => {
+    setTimeout(() => {
+      renderMap()
+    }, 0)
   }
-];
+
+)
+// loader function if do not load script in index.html
+// import { Loader } from "@googlemaps/js-api-loader";
+// const loader = new Loader({
+  //   apiKey: "AIzaSyDovPFfMoi51Y2wPOfgy770OBDkTA7aOkQ",
+
+// });
 
 
-var mcOptions = {
-  gridSize: 50,
-  styles: clusterStyles,
-  maxZoom: 15
-};
 
 
+
+
+/**
+ * @name renderer
+ * @description function for custom cluster
+ * @returns custom marker clusters 
+ */
 
 const renderer = {
   render({ count, position }, clusters) {
@@ -109,21 +108,28 @@ const renderer = {
     });
   }
 }
-
-const closeInfoWindows= ()=>{
+/**
+ * @name closeInfoWindows
+ * @description closes infowindow
+ */
+const closeInfoWindows = () => {
   toggleInfoWindo.value = false
-    infoWindow.close()
+  infoWindowObject.close()
 }
 
-onMounted(
-  () => {
-    renderaMap()
-  }
-  ,
 
-)
-async function renderaMap() {
-  await loader.load()
+const refreshMap = () => {
+  console.log('ref');
+  renderMap()
+}
+
+
+/**
+ * @name renderMap
+ * @description funtion to render map
+ */
+ function renderMap() {
+  // await loader.load()
   mapRef.value = new google.maps.Map(mapDiv.value, {
     center: {
       lat: 20.35828744987769,
@@ -134,13 +140,10 @@ async function renderaMap() {
   });
 
 
-
-
-
   const markers = cords?.map((item, i) => {
     const label = labels[i % labels.length];
 
-    infoWindow = new google.maps.InfoWindow({
+    infoWindowObject = new google.maps.InfoWindow({
       content: "",
       disableAutoPan: false
     });
@@ -151,35 +154,67 @@ async function renderaMap() {
       },
       map: mapRef.value,
       label,
+      // custom marker image
       icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/info-i_maps.png"
     });
 
-
-    marker.addListener("click", (mapsMouseEvent) => {
-      mapRef.value.panTo(mapsMouseEvent.latLng.toJSON());
-      mapRef.value.setZoom(12);
-      infoWindow.setContent(label + '  ' +
-        JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
-      );
-      infoWindow.open(mapRef, marker);
-      toggleInfoWindo.value = true
-      infoWindoContent.value = label + '  ' + JSON.stringify(mapsMouseEvent.latLng.toJSON())
-    });
-    return marker
-  })
-  infoWindow.addListener('closeclick', () => {
+// adding listeners to object
+marker.addListener("click", (mapsMouseEvent) => {
+  mapRef.value.panTo(mapsMouseEvent.latLng.toJSON());
+  mapRef.value.setZoom(12);
+  infoWindowObject.open(mapRef, marker);
+  geocode({ location: mapsMouseEvent.latLng });
+  
+  toggleInfoWindo.value = true
+  infoWindoContent.value = label + '  ' + JSON.stringify(mapsMouseEvent.latLng.toJSON())
+});
+return marker
+})
+// adding listeners to infowindow
+infoWindowObject.addListener('closeclick', () => {
+  closeInfoWindows()
+});
+// adding listeners to map
+mapRef.value.addListener("click", (event) => {
     closeInfoWindows()
   });
-  mapRef.value.addListener("click", (event) => {
-    // console.log(event);
-    closeInfoWindows()
-  });
 
-  clusters.value = new MarkerClusterer({ markers, map: mapRef.value, renderer });
+//clustering individual markers
+clusters.value = new MarkerClusterer({ markers, map: mapRef.value, renderer });
+//initializing geocodeObject
+  geocoderObject = new google.maps.Geocoder();
 
 }
 
+/**
+ * @name geocode
+ * @description geocodes lat lng and gets formated address and sets content to info window
+ * @param {*} request 
+ */
+function geocode(request) {
 
+  console.log(request.location);
+  geocoderObject
+    .geocode(request)
+    .then((result) => {
+      const { results } = result;
+
+      mapRef.value.setCenter(results[0].geometry.location);
+      infoWindowObject.setContent(results[0].formatted_address + '  ' +
+        JSON.stringify(request.location, null, 2)
+      );
+    })
+    .catch((e) => {
+      alert("Geocode was not successful for the following reason: " + e);
+    });
+
+}
+
+/**
+ * @name addMarker 
+ * @description adds marker to map and api call
+ * @param {*} position 
+ */
 function addMarker(position) {
   console.log(position);
 
@@ -191,17 +226,16 @@ function addMarker(position) {
       icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/info-i_maps.png"
     });
     cords.push(marker);
-    // setTimeout(() => {
-    //   renderaMap()
-    // }, 0);
-    // console.log(cords);
+
+    // can do api call here to add marker
+    
 
     google.maps.event.addListener(marker, 'click', (event) => {
       // console.log(event.latLng.toJSON());
-      infoWindow.setContent(
+      infoWindowObject.setContent(
         JSON.stringify(event.latLng.toJSON(), null, 2)
       );
-      infoWindow.open(mapRef, marker);
+      infoWindowObject.open(mapRef, marker);
       mapRef.value.panTo(position);
       mapRef.value.setZoom(12);
     });
@@ -212,7 +246,7 @@ function addMarker(position) {
 }
 </script>
 <style>
-.cursor-pointer{
+.cursor-pointer {
   cursor: pointer;
 }
 </style>
