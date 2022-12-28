@@ -160,19 +160,15 @@ const reset=()=>{
     bill.value=''
     discount.value=''
     customeDiscount.value=''
-
 }
 
-const showValue = (event: any) => {
+const showValue = () => {
 if (customeDiscount.value) {
     discount.value = customeDiscount.value
 }
 
     tipAmount.value = ((bill.value * discount.value / 100) / numberOfPeople.value).toFixed(2)
     totalPerPerson.value = (((bill.value * discount.value / 100) + bill.value) / numberOfPeople.value).toFixed(2)
-
-
-
 }
 
 
