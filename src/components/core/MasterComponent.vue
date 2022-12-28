@@ -1,7 +1,7 @@
 <template>
     <div class="d-flex h-100">
         <SidebarComponent></SidebarComponent>
-        <div className='flex-grow-1 p-3'>
+        <div className='flex-grow-1 '>
             <router-view />
         </div>
 
@@ -10,6 +10,8 @@
 </template>
 
 <script setup lang="ts">
+/* eslint-disable */
+
 import SidebarComponent from './SidebarComponent.vue';
 
 

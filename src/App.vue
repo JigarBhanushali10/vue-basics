@@ -7,6 +7,8 @@
 import MasterComponent from './components/core/MasterComponent.vue';
 </script>
 
-<style>
-
+<style lang="scss">
+// #app{
+//     height: 100px;
+// }
 </style>

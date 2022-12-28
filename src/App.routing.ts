@@ -1,5 +1,6 @@
 
 import PlacesDemo from '@/components/POC Examples/PlacesDemo.vue';
+import TipCalculator from '@/components/TipCalculator/TipCalculator.vue';
 import MapClusters from '@/components/POC Examples/Map-Clusters.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
@@ -7,8 +8,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 const routes: Array<RouteRecordRaw> = [
     {
       path: "/",
-      name: "clusters",
-      component: MapClusters,
+      name: "calculator",
+      component: TipCalculator,
     },
     
     {
@@ -25,6 +26,11 @@ const routes: Array<RouteRecordRaw> = [
       path: "/latestPlaces",
       name: "latestPlaces",
       component: PlacesDemo,
+    },
+    {
+      path: "/calculator",
+      name: "calculator",
+      component: TipCalculator,
     },
   ];
 
